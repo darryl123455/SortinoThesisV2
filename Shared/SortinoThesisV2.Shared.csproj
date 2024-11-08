@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="QRCoder" Version="1.6.0" />
+    <PackageReference Include="ReactorBlazorQRCodeScanner" Version="1.0.5" />
   </ItemGroup>
 
   <ItemGroup>
