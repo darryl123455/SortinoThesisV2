@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortinoThesisV2.Server", "Server\SortinoThesisV2.Server.csproj", "{6D8DF6FB-B93D-4966-B216-C51194E9905D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SortinoThesisV2.Server", "Server\SortinoThesisV2.Server.csproj", "{6D8DF6FB-B93D-4966-B216-C51194E9905D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortinoThesisV2.Client", "Client\SortinoThesisV2.Client.csproj", "{92082C6A-3D9D-4851-B58E-31EAFFFF9BD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SortinoThesisV2.Client", "Client\SortinoThesisV2.Client.csproj", "{92082C6A-3D9D-4851-B58E-31EAFFFF9BD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortinoThesisV2.Shared", "Shared\SortinoThesisV2.Shared.csproj", "{ED5877EC-F2C6-4714-B9BD-78AA2FF9C73D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SortinoThesisV2.Shared", "Shared\SortinoThesisV2.Shared.csproj", "{ED5877EC-F2C6-4714-B9BD-78AA2FF9C73D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
