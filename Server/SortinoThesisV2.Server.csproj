@@ -10,7 +10,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.33" />
     <PackageReference Include="QRCoder" Version="1.6.0" />
-    <PackageReference Include="ReactorBlazorQRCodeScanner" Version="1.0.5" />
   </ItemGroup>
 
   <ItemGroup>
