@@ -8,11 +8,18 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Add Points</button>
 
+<RadzenButton Click="@ButtonClicked" Text="Remove Points"></RadzenButton>
+
 @code {
     private int currentCount = 0;
 
     private void IncrementCount()
     {
         currentCount++;
+    }
+
+    private void ButtonClicked()
+    {
+        currentCount--;
     }
 }

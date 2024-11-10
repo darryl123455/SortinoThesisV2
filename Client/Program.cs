@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using SortinoThesisV2.Client;
+using Radzen;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -14,5 +15,8 @@ builder.Services.AddHttpClient("SortinoThesisV2.ServerAPI", client => client.Bas
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("SortinoThesisV2.ServerAPI"));
 
 builder.Services.AddApiAuthorization();
+
+// Register Radzen Components
+builder.Services.AddRadzenComponents();
 
 await builder.Build().RunAsync();
