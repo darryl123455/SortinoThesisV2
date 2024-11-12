@@ -1,0 +1,18 @@
+﻿@page "/error-message"
+@using Radzen
+
+@code {
+    [Parameter] public string Message { get; set; }
+
+    private void CloseDialog()
+    {
+        DialogService.Close();
+    }
+
+    [CascadingParameter] public DialogService DialogService { get; set; }
+}
+
+<div class="error-modal">
+    <p>@Message</p>
+    <button @onclick="CloseDialog">Close</button>
+</div>

@@ -1,0 +1,70 @@
+﻿@page "/items"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+@inject SortinoThesisV2.Client.Services.ItemService ItemService
+@inject Radzen.DialogService DialogService
+@using SortinoThesisV2.Shared.Models
+
+
+<h3>Item List</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in items)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>
+                    <button @onclick="() => EditItem(item)">Edit</button>
+                    <button @onclick="() => DeleteItem(item.Id)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<button @onclick="ShowAddItemModal">Add New Item</button>
+
+@code {
+    private List<ItemModel> items = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await ItemService.GetItemsAsync();
+    }
+
+    private async Task ShowAddItemModal()
+    {
+        // Open the modal for adding a new item, passing an empty ItemModel to it
+        var result = await DialogService.OpenAsync<ItemModal>("Add New Item", new Dictionary<string, object>
+        {
+            { "Item", new ItemModel() }
+        });
+
+        // If the result is not null, refresh the item list (this means a new item was added)
+        if (result != null)
+        {
+            items = await ItemService.GetItemsAsync();
+        }
+    }
+
+    private async Task EditItem(ItemModel item)
+    {
+        // Your logic to handle editing an item
+    }
+
+    private async Task DeleteItem(int id)
+    {
+        await ItemService.DeleteItemAsync(id);
+        items = await ItemService.GetItemsAsync();
+    }
+}

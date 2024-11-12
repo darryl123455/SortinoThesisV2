@@ -1,0 +1,41 @@
+﻿@using SortinoThesisV2.Shared.Models
+@inject SortinoThesisV2.Client.Services.ItemService ItemService
+@inject Radzen.DialogService DialogService
+
+<EditForm Model="Item" OnValidSubmit="Save">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="name">Name</label>
+        <InputText id="name" @bind-Value="Item.Name" />
+    </div>
+
+    <div>
+        <label for="description">Description</label>
+        <InputText id="description" @bind-Value="Item.Description" />
+    </div>
+
+    <div>
+        <button type="submit">Save</button>
+        <button @onclick="Cancel">Cancel</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public ItemModel Item { get; set; } = new ItemModel();
+
+    private async Task Save()
+    {
+        // Call the ItemService to add the new item
+        await ItemService.AddItemAsync(Item);
+
+        // Close the modal and pass the item back to the parent component
+        DialogService.Close(Item);
+    }
+
+    private void Cancel()
+    {
+        DialogService.Close(null); // Close without saving
+    }
+}
