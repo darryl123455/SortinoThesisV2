@@ -1,41 +1,71 @@
-﻿@using SortinoThesisV2.Shared.Models
+﻿@page "/items-modal"
+@using SortinoThesisV2.Shared.Models
 @inject SortinoThesisV2.Client.Services.ItemService ItemService
-@inject Radzen.DialogService DialogService
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
 
-<EditForm Model="Item" OnValidSubmit="Save">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<!-- Modal Trigger Button -->
+<button class="btn btn-primary" @onclick="OpenModal">Add New Item</button>
 
-    <div>
-        <label for="name">Name</label>
-        <InputText id="name" @bind-Value="Item.Name" />
+<!-- Modal -->
+<div class="modal" tabindex="-1" style="display: @(isModalVisible ? "block" : "none");" @onclick="CloseModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Item</h5>
+                <button type="button" class="btn-close" @onclick="CloseModal"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@item" OnValidSubmit="HandleSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <InputText id="name" class="form-control" @bind-Value="item.Name" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <InputText id="description" class="form-control" @bind-Value="item.Description" />
+                    </div>
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" @onclick="CloseModal">Close</button>
+                <button class="btn btn-primary" @onclick="HandleSubmit">Save</button>
+            </div>
+        </div>
     </div>
-
-    <div>
-        <label for="description">Description</label>
-        <InputText id="description" @bind-Value="Item.Description" />
-    </div>
-
-    <div>
-        <button type="submit">Save</button>
-        <button @onclick="Cancel">Cancel</button>
-    </div>
-</EditForm>
+</div>
 
 @code {
-    [Parameter] public ItemModel Item { get; set; } = new ItemModel();
+    private ItemModel item = new ItemModel();
+    private bool isModalVisible = false;
 
-    private async Task Save()
+    private void OpenModal()
     {
-        // Call the ItemService to add the new item
-        await ItemService.AddItemAsync(Item);
-
-        // Close the modal and pass the item back to the parent component
-        DialogService.Close(Item);
+        isModalVisible = true;
     }
 
-    private void Cancel()
+    private void CloseModal()
     {
-        DialogService.Close(null); // Close without saving
+        isModalVisible = false;
+    }
+
+    private async Task HandleSubmit()
+    {
+        // Logic to save or update the item
+        if (item.Id == 0)
+        {
+            await ItemService.AddItemAsync(item); // Add new item logic
+        }
+        else
+        {
+            await ItemService.UpdateItemAsync(item.Id, item); // Update existing item logic
+        }
+
+        // Close the modal and refresh the item list
+        CloseModal();
+        NavigationManager.NavigateTo("/items"); // Navigate back to the items list page
     }
 }
