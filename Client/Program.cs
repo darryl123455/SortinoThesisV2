@@ -19,6 +19,8 @@ builder.Services.AddApiAuthorization();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<ItemService>();
+builder.Services.AddScoped<PointsService>();
+
 
 
 // Register Radzen Components

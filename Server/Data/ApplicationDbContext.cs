@@ -16,6 +16,7 @@ namespace SortinoThesisV2.Server.Data
         {
         }
 
-        public DbSet<ItemModel> Items { get; set; } // Add this line
+        public DbSet<ItemModel> Items { get; set; }
+        public DbSet<PointsModel> Points { get; set; }
     }
 }

@@ -1,0 +1,74 @@
+﻿@page "/points"
+@using SortinoThesisV2.Client.Services
+@using SortinoThesisV2.Shared.Models
+@inject PointsService PointsService
+
+<h3>Points List</h3>
+
+<button @onclick="AddNewPoint">Add New Point</button>
+
+@if (points == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Value</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var point in points)
+            {
+                <tr>
+                    <td>@point.Value</td>
+                    <td>@point.Description</td>
+                    <td>
+                        <button @onclick="() => EditPoint(point.Id)">Edit</button>
+                        <button @onclick="() => DeletePoint(point.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<PointsModel> points;
+
+    protected override async Task OnInitializedAsync()
+    {
+        points = await PointsService.GetPointsAsync();
+    }
+
+    private async Task AddNewPoint()
+    {
+        var newPoint = new PointsModel
+            {
+                Value = 100, // Example value
+                Description = "New point"
+            };
+
+        await PointsService.AddPointAsync(newPoint);
+        points = await PointsService.GetPointsAsync(); // Refresh list after adding
+    }
+
+    private async Task EditPoint(int id)
+    {
+        var point = await PointsService.GetPointByIdAsync(id);
+        if (point != null)
+        {
+            // Edit logic, you can create a dialog or redirect to a different page for editing.
+        }
+    }
+
+    private async Task DeletePoint(int id)
+    {
+        await PointsService.DeletePointAsync(id);
+        points = await PointsService.GetPointsAsync(); // Refresh list after deleting
+    }
+}
