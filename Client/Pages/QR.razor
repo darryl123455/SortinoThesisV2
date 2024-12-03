@@ -6,38 +6,46 @@
 @attribute [Authorize]
 @inject HttpClient Http
 
-<PageTitle>Qr Code Page</PageTitle>
+<PageTitle>QR Code Page</PageTitle>
 
-<h3>QR Code Page</h3>
+<h3>QR Code Generation</h3>
 
-<input type="text" @bind="InputText" placeholder="Type here..." />
+<!-- Dropdown for material selection -->
+<select @onchange="OnMaterialChanged" class="form-control">
+    <option value="" disabled selected>Select Material</option>
+    <option value="biodegradable">Biodegradable</option>
+    <option value="plastic">Plastic</option>
+    <option value="metal">Metal</option>
+</select>
 
 <br />
 <br />
-
-<button class="btn btn-primary" @onclick="@GenerateQRCode">Generate QR Code</button>
-
-<br />
-<br />
-
 @if (!string.IsNullOrEmpty(QRCodeStr))
 {
     <img src="@QRCodeStr" style="width:200px; height:200px;" />
 }
 
 @code {
-    string InputText { get; set; } = "";
     string QRCodeStr { get; set; } = "";
 
-    public void GenerateQRCode()
+    // Method to call when material selection changes
+    private void OnMaterialChanged(ChangeEventArgs e)
     {
-        QRCodeStr = "";
-        if (!string.IsNullOrEmpty(InputText))
+        string selectedMaterial = e.Value.ToString();
+        GenerateQRCodeForMaterial(selectedMaterial); // Generate QR code when selection changes
+    }
+
+    // Generate QR Code based on selected material
+    public void GenerateQRCodeForMaterial(string material)
+    {
+        QRCodeStr = ""; // Clear any previous QR code
+
+        if (IsValidMaterialType(material))
         {
             using (MemoryStream ms = new MemoryStream())
             {
                 using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
-                using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(InputText, QRCodeGenerator.ECCLevel.Q))
+                using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(material, QRCodeGenerator.ECCLevel.Q))
                 using (PngByteQRCode qrCode = new PngByteQRCode(qrCodeData))
                 {
                     byte[] qrCodeImage = qrCode.GetGraphic(20);
@@ -45,5 +53,16 @@
                 }
             }
         }
+        else
+        {
+            // Optionally display an error message if input is invalid
+            QRCodeStr = "Invalid material type.";
+        }
+    }
+
+    // Validate material type input
+    private bool IsValidMaterialType(string material)
+    {
+        return material.ToLower() == "plastic" || material.ToLower() == "biodegradable" || material.ToLower() == "metal";
     }
 }

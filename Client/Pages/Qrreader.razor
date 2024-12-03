@@ -8,15 +8,18 @@
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 
-<PageTitle>QR Code Reader Page</PageTitle>
+<PageTitle>QR Code Reader</PageTitle>
 
-<h3>QR Code Reader Page</h3>
+<h3>QR Code Reader</h3>
 
 <QRCodeScanner />
+
+<h4>Points: @Points</h4>
 
 @code {
     private QRCodeScannerJsInterop? _qrCodeScannerJsInterop;
     private Action<string>? _onQrCodeScanAction;
+    public int Points { get; set; } = 0; // Track points
 
     protected override async Task OnInitializedAsync()
     {
@@ -26,25 +29,43 @@
         await _qrCodeScannerJsInterop.Init(_onQrCodeScanAction);
     }
 
+    // This method handles the scanned QR code content
     private void OnQrCodeScan(string code)
     {
-        Console.WriteLine($"OnQrCodeScan {code}");
+        Console.WriteLine($"OnQrCodeScan: {code}");
 
-        // Ensure the code has a scheme; add "https://" if it doesn't
-        if (!code.StartsWith("http://") && !code.StartsWith("https://"))
+        // Add points based on the scanned QR code content (material type)
+        AddPoints(code);
+    }
+
+    // Add points based on the material type in the QR code
+    private void AddPoints(string scannedData)
+    {
+        scannedData = scannedData.Trim().ToLower();  // Clean up the scanned data
+
+        if (scannedData.Equals("biodegradable", StringComparison.OrdinalIgnoreCase))
         {
-            code = "https://" + code;
+            Points += 1;
         }
-
-        if (Uri.TryCreate(code, UriKind.Absolute, out var uriResult)
-            && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+        else if (scannedData.Equals("plastic", StringComparison.OrdinalIgnoreCase))
         {
-            // Open in a new tab using JavaScript
-            JS.InvokeVoidAsync("open", code, "_blank");
+            Points += 2;
+        }
+        else if (scannedData.Equals("metal", StringComparison.OrdinalIgnoreCase))
+        {
+            Points += 3;
         }
         else
         {
-            Console.WriteLine("Scanned content is not a valid URL.");
+            Console.WriteLine("Invalid material type scanned.");
         }
+
+        Console.WriteLine($"Current Points: {Points}");  // Log current points for debugging
+
+        // Trigger re-render to update the UI with new points
+        StateHasChanged();
+
+        // Optionally, you can call an API to update the points on the server
+        // e.g., Http.PostJsonAsync("api/points", new { Points });
     }
 }
